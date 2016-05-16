@@ -1,0 +1,57 @@
+---
+title: Getting average profiles of EEM for each group
+author: chengvt
+---
+
+Assuming that there are no outliers in the data, getting average profiles of EEM for each representative group could give a good overview for the difference in EEM patterns between such groups. 
+
+```{r}
+library(EEM)
+data(applejuice)
+country <- sapply(strsplit(names(applejuice), split = "-"), "[", 1) 
+applejuice_uf <- unfold(applejuice) # unfold list into matrix
+result <- prcomp(applejuice_uf) 
+plotScore(result, xPC = 1, yPC = 3, group = country) 
+```
+
+Getting average FF profiles for each country: 
+
+```{r}
+applejuice_uf_mean <- aggregate(applejuice_uf, by = list(country), mean)
+applejuice_uf_mean[,1:5]
+
+# move the first column to row names
+rownames(applejuice_uf_mean) <- applejuice_uf_mean[,1]
+applejuice_uf_mean <- applejuice_uf_mean[,2:ncol(applejuice_uf_mean)]
+applejuice_uf_mean[,1:5]
+
+applejuice_mean <- fold(applejuice_uf_mean)
+drawEEM(applejuice_mean, 1)
+drawEEM(applejuice_mean, 2)
+```
+
+Getting standard deviation of FF profiles for each country to see the deviation: 
+
+```{r}
+applejuice_uf_sd <- aggregate(applejuice_uf, by = list(country), sd)
+applejuice_uf_sd[,1:5]
+
+# move the first column to row names
+rownames(applejuice_uf_sd) <- applejuice_uf_sd[,1]
+applejuice_uf_sd <- applejuice_uf_sd[,2:ncol(applejuice_uf_sd)]
+applejuice_uf_sd[,1:5]
+
+applejuice_sd <- fold(applejuice_uf_sd)
+drawEEM(applejuice_sd, 1)
+drawEEM(applejuice_sd, 2)
+```
+
+The whole process seems tedious so a function `cheng::gcProcessEEM` was created to smooth the process.
+
+```{r}
+require(cheng)
+applejuice_mean <- gcProcessEEM(applejuice, country, mean)
+drawEEM(applejuice_mean, 1)
+```
+
+
