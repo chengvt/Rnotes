@@ -1,0 +1,19 @@
+---
+title: "Scatterplots (ggplot2)"
+author: "chengvt"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg))
+p + geom_point()
+
+# Add aesthetic mappings
+p + geom_point(aes(colour = factor(cyl)))
+p + geom_point(aes(shape = factor(cyl)))
+p + geom_point(aes(size = qsec))
+
+# Change scales
+p + geom_point(aes(colour = cyl)) + scale_colour_gradient(low = "blue")
+```

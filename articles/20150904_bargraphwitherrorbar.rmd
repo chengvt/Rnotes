@@ -1,0 +1,41 @@
+---
+title: "Creating bar plot with errorbars in R"
+author: chengvt
+---
+`Iris` data will be used as an example. 
+
+```{r}
+data(iris)
+head(iris)
+```
+
+There are two methods that 
+
+## Method 1: Create summary dataframe and plot based on it
+```{r, warning=FALSE}
+# melt data
+library(reshape2)
+iris.melted <- melt(iris, id.var = "Species")
+head(iris.melted)
+
+# summarize
+library(dplyr)
+iris.summary <- iris.melted %>% group_by(variable, Species) %>% 
+    summarize(mean = mean(value), std = sd(value)) # add SE here too!
+
+# plot bar graph using ggplot2
+library(ggplot2)
+
+# errorbar = standard deviation
+ggplot(iris.summary, aes(x = Species, y = mean, fill = Species)) + geom_bar(stat = "identity") +
+    facet_wrap(~ variable, scales = "free") + geom_errorbar(aes(ymin = mean + std, ymax = mean - std), width = 0.3)
+```
+
+## Method 2: use original dataframe
+
+```{r}
+library(Hmisc)
+ggplot(data = iris.melted, aes(x = Species, y = value, fill = Species)) + facet_wrap(~ variable, scales = "free") +
+    stat_summary(fun.y = mean, geom = "bar") +
+    stat_summary(fun.data = mean_sdl, geom = "errorbar", width = 0.3) 
+```
