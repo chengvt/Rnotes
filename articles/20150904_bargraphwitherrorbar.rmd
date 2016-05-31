@@ -9,7 +9,7 @@ data(iris)
 head(iris)
 ```
 
-There are two methods that 
+There are two methods that can be used to create bar plots with error bars.
 
 ## Method 1: Create summary dataframe and plot based on it
 ```{r, warning=FALSE}
