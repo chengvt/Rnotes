@@ -1,0 +1,18 @@
+---
+title: "Inflating and deflating data"
+author: "chengvt"
+date: "2016年5月25日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+Inflate
+
+# data frame
+ESR_inflated <- rep(seq_len(nrow(ESR)), each = 3)
+```
+

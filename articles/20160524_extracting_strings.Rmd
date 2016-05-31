@@ -1,0 +1,54 @@
+---
+title: "Extracting strings"
+author: "chengvt"
+date: 2016.05.24
+output: 
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Extracting information from strings
+
+## Extracting positional strings
+`substr` function can be used to extract positional strings.
+For example, let's say that we want to extract cultivar information which is 
+from the $8^{th}$ to $11^{th}$ letters.
+```{r}
+sampleName <- "Aomori-Fuji-1-1"
+substr(sampleName, start = 8, stop = 11)
+```
+
+This method can also be applied to a vector of strings.
+```{r}
+sampleNames <- c("Aomori-Fuji-1-1", "Aomori-Jona-1-1")
+substr(sampleNames, start = 8, stop = 11)
+```
+
+## Split strings by separators
+`strsplit` function can be used to separate the strings when a separator is present.
+```{r}
+sampleName <- "Aomori-Fuji-1-1"
+strsplit(sampleName, split = "-")
+```
+
+This method is useful for cases where the positional extraction is not applicable.
+```{r}
+sampleNames <- c("Aomori-Fuji-1-1", "Aomori-Jona-1-1", "NZ-Envy-1-1")
+splitedNames <- strsplit(sampleNames, split = "-")
+sapply(splitedNames, "[", 2)
+```
+
+## Using `sub` together with `regular expression`
+
+Using `regular expression` together with `sub` gives a very flexible way to extract strings
+```{r}
+sampleNames <- c("Aomori-Fuji-1-1", "Aomori-Jona-1-1", "NZ-Envy-1-1")
+sub("^([A-Za-z]+-[A-Za-z]+)(.*)", "\\1", sampleNames) 
+# or
+sub("(^[A-Za-z0-9]+-)([A-Za-z0-9]+)(-.*)", "\\1\\2", sampleNames)
+```
+
